@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+group = 'org.netf.samples.jett-loop'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+dependencies {
+	compile group: 'org.projectlombok', name: 'lombok', version:'1.18.4'
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+
+	// https://mvnrepository.com/artifact/net.sf.jett/jett-core
+	compile group: 'net.sf.jett', name: 'jett-core', version: '0.11.0'
+	// https://mvnrepository.com/artifact/net.sf.jett/jett
+	compile group: 'net.sf.jett', name: 'jett', version: '0.11.0', ext: 'pom'
+}
+
+eclipse {
+	classpath {
+		defaultOutputDir = file('build/classes/java/main')
+
+		file {
+        	whenMerged {
+	        	entries.each { source ->
+					if (source.kind == 'src' && !source.path.startsWith('/')) {
+						// only Source-folders in the project starting with '/' are project-references
+						source.output = null
+        			}
+				}
+    	    }
+	    }
+	}
+}
+
